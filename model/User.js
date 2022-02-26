@@ -33,6 +33,17 @@ const userSchema = new Schema({
         max: 10000000,
         default: 1,
     },
+    hobbies: [ String ],
+    twoFavoriteFoods: {
+        firstFavorite: {
+            type: String,
+            trim: true,
+        },
+        secondFavorite: {
+            type: String,
+            trim: true,
+        },
+    }
 });
 
 const User = model('User', userSchema);

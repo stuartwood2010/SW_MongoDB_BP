@@ -3,7 +3,15 @@ const { User } = require('../model');
 
 module.exports = {
     createUser: async (req, res) => {
-        const { username, email, role, powerLevel } = req.body;
+        const { 
+            username, 
+            email, 
+            role, 
+            powerLevel,
+            hobby, 
+            firstFavorite,
+            secondFavorite,
+        } = req.body;
 
         if(!isEmail(email)) {
            return res.status(401).json({error: 'Please enter a valid email address'});
@@ -14,6 +22,11 @@ module.exports = {
                 email,
                 role,
                 powerLevel,
+                hobbies: [hobby],
+                twoFavoriteFoods: {
+                    firstFavorite,
+                    secondFavorite,
+                }
             });
             res.json(newUser);
         } catch (error) {
@@ -62,4 +75,25 @@ module.exports = {
             res.json(error);
         }
     },
+    addHobbyToUserById: async (req, res) => {
+        const { userId } = req.params;
+        const { hobby } = req.body;
+
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                {
+                    $push: {
+                        hobbies: hobby,
+                    },
+                },
+                {
+                    new: true
+                }
+            );
+            res.json(updatedUser)
+        } catch (error) {
+            res.json(error)
+        }
+    }
 }
